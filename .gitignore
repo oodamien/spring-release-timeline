@@ -1,0 +1,9 @@
+.env
+.cache/
+node_modules/
+analysis/
+yarn-error.log
+
+public/
+.idea/
+.DS_Store
