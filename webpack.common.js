@@ -7,7 +7,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 const isDev = process.env.NODE_ENV === 'development'
 
 const config = {
-  entry: path.resolve(__dirname, 'src/Index.js'),
+  entry: path.resolve(__dirname, 'src/App.js'),
   output: {
     path: path.resolve(__dirname, 'public'),
     publicPath: '/',
