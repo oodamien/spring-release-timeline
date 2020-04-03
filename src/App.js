@@ -3,7 +3,12 @@
 import './styles.scss'
 
 const date = new Date()
-const axis = [2017, 2018, 2019, 2020, 2021]
+const yeardisplay = 5
+
+const axis = Array.from({ length: yeardisplay }).map((_, i) => {
+  return date.getFullYear() - (yeardisplay - 2) + i
+})
+
 const minDate = new Date(`${axis[0]}-01-01`)
 const maxDate = new Date(`${axis[axis.length - 1]}-12-31`)
 const maxScale = axis.length * 365
@@ -75,20 +80,20 @@ const validMigrate = release => {
 
 const getDayInYear = date => {
   var start = new Date(date.getFullYear(), 0, 0)
-  return Math.floor((date - start) / (1000 * 60 * 60 * 24))
+  return (date - start) / (1000 * 60 * 60 * 24)
 }
 
 function dateDiff(first, second) {
-  return Math.floor((second - first) / (1000 * 60 * 60 * 24))
+  return (second - first) / (1000 * 60 * 60 * 24)
 }
 
 const getReleaseLeft = date => {
-  let left = (date.getFullYear() - axis[0]) * 365 + getDayInYear(date)
-  return Math.round((left / maxScale) * 95, 2)
+  let left = dateDiff(new Date(`${axis[0]}-01-01`), date)
+  return (left / maxScale) * 95
 }
 
 const getReleaseWidth = (start, end) => {
-  return Math.round((dateDiff(start, end) / maxScale) * 95, 2)
+  return (dateDiff(start, end) / maxScale) * 95
 }
 
 const getFormattedDate = date => {
@@ -125,6 +130,9 @@ const dateMax = (first, second) => {
   return second
 }
 
+// Main Config
+document.querySelector('#timeline').className = `timeline t${axis.length}`
+
 // Axis
 
 Array.from({ length: axis.length + 1 }).forEach((_, index) => {
@@ -152,7 +160,7 @@ _releases.forEach(_release => {
 
   if (validRelease(release, axis)) {
     const label = document.createElement('div')
-    label.className = `label ${release.status}`
+    label.className = `label label-release ${release.status}`
     label.addEventListener('mouseenter', event => {
       event.target.parentElement.className = 'release active'
     })
@@ -248,5 +256,17 @@ currentLabel.append(document.createTextNode(getFormattedDate(date)))
 current.append(currentLabel)
 
 current.style.left = `${getReleaseLeft(new Date())}%`
-
 document.querySelector('#timeline').append(current)
+
+// Legend size
+
+let labelsWidth = 0
+document.querySelectorAll('.label-release').forEach(control => {
+  if (control.offsetWidth > labelsWidth) {
+    labelsWidth = control.offsetWidth
+  }
+})
+document.querySelectorAll('.label-release').forEach(control => {
+  control.style.left = `-${labelsWidth + 20}px`
+})
+document.querySelector('#timeline').style.marginLeft = `${labelsWidth + 20}px`

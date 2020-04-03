@@ -60,10 +60,35 @@ body {
   margin: 2rem 0 2rem 100px;
   padding: 0 0 2rem;
   position: relative;
+  &.t7 {
+    .axis .year {
+      width: 13.571428571%;
+    }
+  }
+  &.t6 {
+    .axis .year {
+      width: 15.8333333333%;
+    }
+  }
+  &.t5 {
+    .axis .year {
+      width: 19%;
+    }
+  }
+  &.t4 {
+    .axis .year {
+      width: 23.75%;
+    }
+  }
+  &.t3 {
+    .axis .year {
+      width: 31.666666667%;
+    }
+  }
   .axis {
     position: absolute;
     top: 0;
-    left: 0;
+    left: 1px;
     right: 0;
     bottom: 0;
     display: flex;
@@ -100,9 +125,7 @@ body {
       position: absolute;
     }
     .plop-active {
-      width: 19%;
       background: #99e67d;
-      left: 19%;
       &.coming {
         background: #c1edff;
       }

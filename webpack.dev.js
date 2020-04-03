@@ -4,7 +4,6 @@ const merge = require('webpack-merge')
 const common = require('./webpack.common.js')
 const path = require('path')
 
-const mock = require('./dev/api.json')
 const fs = require('fs')
 
 const config = {
