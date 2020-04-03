@@ -4,9 +4,14 @@ body {
 
 .sample {
   width: 1000px;
-  margin: 0 auto;
+  margin: 4rem auto;
   font-family: Arial;
   font-size: 15px;
+  hr {
+    border: 0 none;
+    border-top: 1px solid #ebf2f2;
+    margin: 4rem 0;
+  }
 }
 
 .table {
@@ -53,6 +58,13 @@ body {
   }
   .coming .status {
     background-color: #c1edff;
+  }
+  a {
+    color: #000;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 

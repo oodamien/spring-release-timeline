@@ -6,8 +6,8 @@
   </head>
   <body>
     <div class="sample">
-      <div id="calendar-releases" class="tab-pane">
-        <table class="table is-striped is-fullwidth">
+      <div class="calendar-releases">
+        <table id="release-table" class="table is-striped is-fullwidth">
           <thead>
             <tr>
               <th>Branch</th>
@@ -19,23 +19,35 @@
           <tbody>
             <tr>
               <td class="release">
-                <a><span class="status"></span> 1.5.x</a>
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 1.5.x</a
+                >
               </td>
-              <td><span class="outdated">1 Janv 2017</span></td>
+              <td><span class="outdated">1 Jan 2017</span></td>
               <td><span class="outdated">1 Aug 2019</span></td>
               <td><span class="outdated">1 Aug 2019</span></td>
             </tr>
             <tr>
               <td class="release">
-                <a><span class="status"></span> 2.0.x</a>
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/2.0.x"
+                  target="_blank"
+                  ><span class="status"></span> 2.0.x</a
+                >
               </td>
               <td><span class="outdated">1 Mar 2018</span></td>
-              <td><span class="outdated">3 Mar. 2019</span></td>
+              <td><span class="outdated">3 Mar 2019</span></td>
               <td><span class="outdated">1 Oct 2019</span></td>
             </tr>
             <tr>
               <td class="release migrate">
-                <a><span class="status"></span> 2.1.x</a>
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/2.1.x"
+                  target="_blank"
+                  ><span class="status"></span> 2.1.x</a
+                >
               </td>
               <td><span class="outdated">1 Oct 2018</span></td>
               <td><span class="">31 Oct 2020</span></td>
@@ -43,7 +55,11 @@
             </tr>
             <tr>
               <td class="release active">
-                <a><span class="status"></span> 2.2.x</a>
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/2.2.x"
+                  target="_blank"
+                  ><span class="status"></span> 2.2.x</a
+                >
               </td>
               <td><span class="outdated">1 Oct 2019</span></td>
               <td><span class="">1 May 2021</span></td>
@@ -59,59 +75,83 @@
             </tr>
           </tbody>
         </table>
+      </div>
 
-        <div id="timeline" class="timeline">
-          <div class="releases">
-            <div
-              class="release"
-              data-status="inactive"
-              data-release="1.5.x"
-              data-initial="01-01-2017"
-              data-migrate="03-01-2018"
-              data-end="08-01-2019"
-              data-link="https://github.com/spring-projects/spring-boot/tree/1.5.x"
-            ></div>
+      <hr />
 
-            <div
-              class="release"
-              data-status="inactive"
-              data-release="2.0.x"
-              data-initial="03-01-2018"
-              data-migrate="10-01-2018"
-              data-end="10-01-2019"
-              data-link="https://github.com/spring-projects/spring-boot/tree/2.0.x"
-            ></div>
-
-            <div
-              class="release"
-              data-status="migrate"
-              data-release="2.1.x"
-              data-initial="10-01-2018"
-              data-migrate="10-01-2019"
-              data-end="10-31-2020"
-              data-link="https://github.com/spring-projects/spring-boot/tree/2.1.x"
-            ></div>
-
-            <div
-              class="release"
-              data-status="active"
-              data-release="2.2.x"
-              data-initial="10-01-2019"
-              data-migrate="10-31-2021"
-              data-end="10-31-2021"
-              data-link="https://github.com/spring-projects/spring-boot/tree/2.2.x"
-            ></div>
-
-            <div
-              class="release"
-              data-status="coming"
-              data-release="2.3.x"
-              data-initial="05-01-2020"
-            ></div>
-          </div>
-
-          <div class="axis"></div>
-        </div>
+      <div class="calendar-releases">
+        <table id="release-table" class="table is-striped is-fullwidth">
+          <thead>
+            <tr>
+              <th>Branch</th>
+              <th>Initial Release</th>
+              <th>End of Support</th>
+              <th>End Commercial Support</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="release">
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 3.2.x</a
+                >
+              </td>
+              <td><span class="outdated">13 Dec 2012</span></td>
+              <td><span class="outdated">13 Dec 2016</span></td>
+              <td><span class="outdated">10 Jun 2017</span></td>
+            </tr>
+            <tr>
+              <td class="release migrate">
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 4.3.x</a
+                >
+              </td>
+              <td><span class="outdated">10 Jun 2016</span></td>
+              <td><span class="">31 Dec 2020</span></td>
+              <td><span class="">31 Dec 2020</span></td>
+            </tr>
+            <tr>
+              <td class="release migrate">
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 5.0.x</a
+                >
+              </td>
+              <td><span class="outdated">29 Sep 2017</span></td>
+              <td><span class="">31 Dec 2020</span></td>
+              <td><span class="">31 Dec 2020</span></td>
+            </tr>
+            <tr>
+              <td class="release migrate">
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 5.1.x</a
+                >
+              </td>
+              <td><span class="outdated">1 Sep 2018</span></td>
+              <td><span class="">1 Oct 2020</span></td>
+              <td><span class="">1 Oct 2020</span></td>
+            </tr>
+            <tr>
+              <td class="release active">
+                <a
+                  href="https://github.com/spring-projects/spring-boot/tree/1.5.x"
+                  target="_blank"
+                  ><span class="status"></span> 5.2.x</a
+                >
+              </td>
+              <td><span class="outdated">1 Sep 2019</span></td>
+              <td><span class="">31 Dec 2021</span></td>
+              <td><span class="">31 Dec 2021</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </body>
