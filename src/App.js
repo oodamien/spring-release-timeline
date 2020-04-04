@@ -122,6 +122,12 @@ const parseDate = str => {
   return new Date(`${y}-${m}-${d}`)
 }
 
+const createDiv = ({ className }) => {
+  const element = document.createElement('div')
+  element.className = className || ''
+  return element
+}
+
 // Parsing table
 
 const calendars = document.querySelectorAll('.calendar-releases')
@@ -129,16 +135,10 @@ const calendars = document.querySelectorAll('.calendar-releases')
 calendars.forEach(calendar => {
   // Create Timeline
 
-  const _timeline = document.createElement('div')
-  _timeline.className = 'timeline'
-
-  const _releasesDiv = document.createElement('div')
-  _releasesDiv.className = 'releases'
-
-  const _axisDiv = document.createElement('div')
-  _axisDiv.className = 'axis'
+  const _timeline = createDiv({ className: 'timeline' })
+  const _releasesDiv = createDiv({ className: 'releases' })
+  const _axisDiv = createDiv({ className: 'axis' })
   calendar.append(_timeline)
-
   _timeline.append(_releasesDiv)
   _timeline.append(_axisDiv)
 
@@ -197,11 +197,9 @@ calendars.forEach(calendar => {
   // Axis
 
   Array.from({ length: axis.length + 1 }).forEach((_, index) => {
-    const container = document.createElement(`div`)
-    const item = document.createElement(`div`)
-    item.className = 'label'
+    const container = createDiv({ className: 'year' })
+    const item = createDiv({ className: 'label' })
     item.append(document.createTextNode(axis[0] + index))
-    container.className = 'year'
     container.append(item)
     _timeline.querySelector('.axis').append(container)
   })
@@ -211,12 +209,12 @@ calendars.forEach(calendar => {
   const _releases = _timeline.querySelector('div.releases')
 
   releases.forEach(release => {
-    const _releaseD = document.createElement('div')
-    _releaseD.className = 'release'
+    const _releaseD = createDiv({ className: 'release' })
     _releases.append(_releaseD)
     if (validRelease(release, minDate, maxDate)) {
-      const label = document.createElement('div')
-      label.className = `label label-release ${release.status}`
+      const label = createDiv({
+        className: `label label-release ${release.status}`,
+      })
       label.addEventListener('mouseenter', event => {
         event.target.parentElement.className = 'release active'
       })
@@ -236,8 +234,7 @@ calendars.forEach(calendar => {
       }
       _releaseD.append(label)
       if (validActive(release, minDate, maxDate)) {
-        const plopActive = document.createElement('div')
-        plopActive.className = 'plop plop-active'
+        const plopActive = createDiv({ className: 'plop plop-active' })
         plopActive.style.left = `${getReleaseLeft(
           dateMax(release.initial, minDate),
           axis,
@@ -252,24 +249,22 @@ calendars.forEach(calendar => {
           plopActive.className = 'plop plop-active coming'
         }
 
-        const date1 = document.createElement('div')
+        const date1 = createDiv({ className: 'date left' })
         const span1 = document.createElement('span')
         span1.append(
           document.createTextNode(
             getFormattedDateShort(dateMax(release.initial, minDate))
           )
         )
-        date1.className = 'date left'
         date1.append(span1)
 
-        const date2 = document.createElement('div')
+        const date2 = createDiv({ className: 'date right' })
         const span2 = document.createElement('span')
         span2.append(
           document.createTextNode(
             getFormattedDateShort(dateMin(release.migrate, maxDate))
           )
         )
-        date2.className = 'date right'
         date2.append(span2)
 
         plopActive.append(date1)
@@ -277,8 +272,7 @@ calendars.forEach(calendar => {
         _releaseD.append(plopActive)
       }
       if (validMigrate(release)) {
-        const plopMigrate = document.createElement('div')
-        plopMigrate.className = 'plop plop-migrate'
+        const plopMigrate = createDiv({ className: 'plop plop-migrate' })
         plopMigrate.style.left = `${getReleaseLeft(
           dateMax(release.migrate, minDate),
           axis,
@@ -290,14 +284,13 @@ calendars.forEach(calendar => {
           maxScale
         )}%`
 
-        const date1 = document.createElement('div')
+        const date1 = createDiv({ className: 'date right' })
         const span1 = document.createElement('span')
         span1.append(
           document.createTextNode(
             getFormattedDateShort(dateMin(release.end, maxDate))
           )
         )
-        date1.className = 'date right'
         date1.append(span1)
 
         plopMigrate.append(date1)
@@ -310,10 +303,8 @@ calendars.forEach(calendar => {
 
   // Current Date
 
-  const current = document.createElement('div')
-  current.className = 'current-date'
-  const currentLabel = document.createElement('div')
-  currentLabel.className = 'label'
+  const current = createDiv({ className: 'current-date' })
+  const currentLabel = createDiv({ className: 'label' })
   currentLabel.append(document.createTextNode(getFormattedDate(date)))
   current.append(currentLabel)
 
