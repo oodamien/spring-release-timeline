@@ -144,8 +144,7 @@ const createCurrenDate = ({ timeline, axis, scale }) => {
   const currentLabel = createDiv({ className: 'label' })
   currentLabel.append(document.createTextNode(getFormattedDate(date)))
   current.append(currentLabel)
-
-  current.style.left = `${getReleaseLeft(new Date(), axis, scale)}%`
+  current.style.left = `${getReleaseLeft(date, axis, scale)}%`
   timeline.append(current)
 }
 
@@ -174,7 +173,6 @@ const createReleases = ({
   scale,
 }) => {
   const _releases = timeline.querySelector('div.releases')
-
   releases.forEach(release => {
     const _releaseD = createDiv({ className: 'release' })
     _releases.append(_releaseD)
@@ -215,7 +213,6 @@ const createReleases = ({
         if (release.initial > date) {
           plopActive.className = 'plop plop-active coming'
         }
-
         const date1 = createDiv({ className: 'date left' })
         const span1 = document.createElement('span')
         span1.append(
@@ -224,7 +221,6 @@ const createReleases = ({
           )
         )
         date1.append(span1)
-
         const date2 = createDiv({ className: 'date right' })
         const span2 = document.createElement('span')
         span2.append(
@@ -233,7 +229,6 @@ const createReleases = ({
           )
         )
         date2.append(span2)
-
         plopActive.append(date1)
         plopActive.append(date2)
         _releaseD.append(plopActive)
@@ -250,7 +245,6 @@ const createReleases = ({
           dateMin(release.end, maxDate),
           scale
         )}%`
-
         const date1 = createDiv({ className: 'date right' })
         const span1 = document.createElement('span')
         span1.append(
@@ -259,7 +253,6 @@ const createReleases = ({
           )
         )
         date1.append(span1)
-
         plopMigrate.append(date1)
         _releaseD.append(plopMigrate)
       }
@@ -269,52 +262,44 @@ const createReleases = ({
   })
 }
 
-// Single project
+const parseTdRelease = tr => {
+  const tds = tr.querySelectorAll('td')
+  const endSupport = parseDate(tds[2].innerText)
+  const endCommercial = parseDate(tds[3].innerText)
+  const initial = parseDate(tds[1].innerText)
+  if (initial && initial < date) {
+    tds[1].querySelector('span').className = 'outdated'
+  }
+  if (endSupport && endSupport < date) {
+    tds[2].querySelector('span').className = 'outdated'
+  }
+  if (endCommercial && endCommercial < date) {
+    tds[3].querySelector('span').className = 'outdated'
+  }
+  const a = tds[0].querySelector('a')
+  let status = 'inactive'
+  if (tds[0].className.indexOf('migrate') > -1) {
+    status = 'migrate'
+  }
+  if (tds[0].className.indexOf('active') > -1) {
+    status = 'active'
+  }
+  if (tds[0].className.indexOf('coming') > -1) {
+    status = 'coming'
+  }
+  return {
+    name: tds[0].innerText,
+    status,
+    link: a ? a.getAttribute('href') : '',
+    initial,
+    end: endSupport > endCommercial ? endSupport : endCommercial,
+  }
+}
 
-const tableReleases = document.querySelectorAll('.calendar-releases')
-
-tableReleases.forEach(calendar => {
-  // Create Timeline
-
-  const timeline = createDiv({ className: 'timeline' })
-  const _releasesDiv = createDiv({ className: 'releases' })
-  const _axisDiv = createDiv({ className: 'axis' })
-  calendar.append(timeline)
-  timeline.append(_releasesDiv)
-  timeline.append(_axisDiv)
-
-  const trs = calendar.querySelectorAll('table tbody tr')
-  const tmp = []
+const arrangeReleases = arr => {
   const releases = []
-
-  // Parsing table data
-
-  trs.forEach(tr => {
-    const tds = tr.querySelectorAll('td')
-    const endSupport = parseDate(tds[2].innerText)
-    const endCommercial = parseDate(tds[3].innerText)
-    const a = tds[0].querySelector('a')
-    let status = 'inactive'
-    if (tds[0].className.indexOf('migrate') > -1) {
-      status = 'migrate'
-    }
-    if (tds[0].className.indexOf('active') > -1) {
-      status = 'active'
-    }
-    if (tds[0].className.indexOf('coming') > -1) {
-      status = 'coming'
-    }
-    tmp.push({
-      name: tds[0].innerText,
-      status,
-      link: a ? a.getAttribute('href') : '',
-      initial: parseDate(tds[1].innerText),
-      end: endSupport > endCommercial ? endSupport : endCommercial,
-    })
-  })
-
-  tmp.forEach((release, index) => {
-    const next = index < tmp.length ? tmp[index + 1] : null
+  arr.forEach((release, index) => {
+    const next = index < arr.length ? arr[index + 1] : null
     let migrate = ''
     if (next) {
       if (next.initial > release.initial && next.initial < release.end) {
@@ -323,9 +308,20 @@ tableReleases.forEach(calendar => {
     }
     releases.push({ ...release, migrate })
   })
+  return releases
+}
 
-  // Timeline Config
+const createTimeline = ({ calendar }) => {
+  const timeline = createDiv({ className: 'timeline' })
+  const _releasesDiv = createDiv({ className: 'releases' })
+  const _axisDiv = createDiv({ className: 'axis' })
+  calendar.append(timeline)
+  timeline.append(_releasesDiv)
+  timeline.append(_axisDiv)
+  return timeline
+}
 
+const getConfig = () => {
   const yeardisplay = 5
   const axis = Array.from({ length: yeardisplay }).map(
     (_, i) => date.getFullYear() - (yeardisplay - 2) + i
@@ -333,55 +329,55 @@ tableReleases.forEach(calendar => {
   const minDate = new Date(`${axis[0]}-01-01`)
   const maxDate = new Date(`${axis[axis.length - 1]}-12-31`)
   const scale = axis.length * 365
-
-  // Axis
-  createAxis({
-    timeline,
-    axis,
-  })
-
-  // Release
-
-  createReleases({
-    timeline,
-    releases,
+  return {
+    scale,
     minDate,
     maxDate,
     axis,
-    scale,
-  })
+  }
+}
 
+const createHead = ({ timeline, project }) => {
+  const head = createDiv({ className: 'head' })
+  const headContent = createDiv({ className: 'content' })
+  headContent.innerText = project
+  head.append(headContent)
+  timeline.querySelector('.releases').append(head)
+}
+
+// Single project
+const tableReleases = document.querySelectorAll('.calendar-releases')
+tableReleases.forEach(calendar => {
+  // Create Timeline
+  const timeline = createTimeline({ calendar })
+  const trs = calendar.querySelectorAll('table tbody tr')
+  const tmp = []
+  // Parsing table data
+  trs.forEach(tr => {
+    tmp.push(parseTdRelease(tr))
+  })
+  const releases = arrangeReleases(tmp)
+  // Timeline Config
+  const config = getConfig()
+  // Release
+  createReleases({ timeline, releases, ...config })
+  // Axis
+  createAxis({ timeline, ...config })
   // Current Date
-  createCurrenDate({
-    timeline,
-    axis,
-    scale,
-  })
-
+  createCurrenDate({ timeline, ...config })
   // Legend size
-  updateLegend({
-    timeline,
-  })
+  updateLegend({ timeline, ...config })
 })
 
 // Grouped table realeases
-
 const groupedReleases = document.querySelectorAll('.group-releases')
-
 groupedReleases.forEach(calendar => {
   // Create Timeline
-
-  const timeline = createDiv({ className: 'timeline' })
-  const _releasesDiv = createDiv({ className: 'releases' })
-  const _axisDiv = createDiv({ className: 'axis' })
-  calendar.append(timeline)
-  timeline.append(_releasesDiv)
-  timeline.append(_axisDiv)
-
+  const timeline = createTimeline({ calendar })
   const trs = calendar.querySelectorAll('table tbody tr')
   const tmp = []
   const projects = []
-
+  // Parsing table data
   trs.forEach(tr => {
     const tds = tr.querySelectorAll('td')
     if (tds[0].className === 'head') {
@@ -390,91 +386,26 @@ groupedReleases.forEach(calendar => {
         releases: [],
       })
     } else {
-      const endSupport = parseDate(tds[2].innerText)
-      const endCommercial = parseDate(tds[3].innerText)
-      const a = tds[0].querySelector('a')
-      let status = 'inactive'
-      if (tds[0].className.indexOf('migrate') > -1) {
-        status = 'migrate'
-      }
-      if (tds[0].className.indexOf('active') > -1) {
-        status = 'active'
-      }
-      if (tds[0].className.indexOf('coming') > -1) {
-        status = 'coming'
-      }
-      tmp[tmp.length - 1].releases.push({
-        name: tds[0].innerText,
-        status,
-        link: a ? a.getAttribute('href') : '',
-        initial: parseDate(tds[1].innerText),
-        end: endSupport > endCommercial ? endSupport : endCommercial,
-      })
+      tmp[tmp.length - 1].releases.push(parseTdRelease(tr))
     }
   })
-
   tmp.forEach((group, index) => {
     projects.push({
       name: group.name,
-      releases: [],
-    })
-    group.releases.forEach((release, index2) => {
-      const next =
-        index2 < group.releases.length ? group.releases[index2 + 1] : null
-      let migrate = ''
-      if (next) {
-        if (next.initial > release.initial && next.initial < release.end) {
-          migrate = next.initial
-        }
-      }
-      projects[index].releases.push({ ...release, migrate })
+      releases: arrangeReleases(group.releases),
     })
   })
-
   // Timeline Config
-
-  const yeardisplay = 5
-  const axis = Array.from({ length: yeardisplay }).map(
-    (_, i) => date.getFullYear() - (yeardisplay - 2) + i
-  )
-  const minDate = new Date(`${axis[0]}-01-01`)
-  const maxDate = new Date(`${axis[axis.length - 1]}-12-31`)
-  const scale = axis.length * 365
-
-  // Axis
-  createAxis({
-    timeline,
-    axis,
-  })
-
+  const config = getConfig()
   // Release
-
   projects.forEach(project => {
-    const head = createDiv({ className: 'head' })
-    const headContent = createDiv({ className: 'content' })
-    headContent.innerText = project.name
-    head.append(headContent)
-    timeline.querySelector('.releases').append(head)
-
-    createReleases({
-      timeline,
-      releases: project.releases,
-      minDate,
-      maxDate,
-      axis,
-      scale,
-    })
+    createHead({ timeline, project: project.name })
+    createReleases({ timeline, releases: project.releases, ...config })
   })
-
+  // Axis
+  createAxis({ timeline, ...config })
   // Current Date
-  createCurrenDate({
-    timeline,
-    axis,
-    scale,
-  })
-
+  createCurrenDate({ timeline, ...config })
   // Legend size
-  updateLegend({
-    timeline,
-  })
+  updateLegend({ timeline, ...config })
 })
