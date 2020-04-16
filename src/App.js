@@ -90,16 +90,7 @@ const dateMin = (first, second) => {
 }
 
 const dateMax = (first, second) => {
-  if (!first) {
-    return second
-  }
-  if (!second) {
-    return first
-  }
-  if (first > second) {
-    return first
-  }
-  return second
+  return dateMin(first, second) === first ? second : first
 }
 
 const parseDate = str => {
@@ -326,13 +317,10 @@ const getConfig = () => {
   const axis = Array.from({ length: yeardisplay }).map(
     (_, i) => date.getFullYear() - (yeardisplay - 2) + i
   )
-  const minDate = new Date(`${axis[0]}-01-01`)
-  const maxDate = new Date(`${axis[axis.length - 1]}-12-31`)
-  const scale = axis.length * 365
   return {
-    scale,
-    minDate,
-    maxDate,
+    scale: axis.length * 365,
+    minDate: new Date(`${axis[0]}-01-01`),
+    maxDate: new Date(`${axis[axis.length - 1]}-12-31`),
     axis,
   }
 }
